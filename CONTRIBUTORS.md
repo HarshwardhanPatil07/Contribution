@@ -14,6 +14,7 @@
   
 | Name | Github Link |
 | ------|----------|
+| J Dipayan Rao | <a href="https://github.com/mrstrange2003">mrstrange2003</a> |
 | HarshwardhanPatil07 | <a href="github.com/HarshwardhanPatil07">Harshwardhan Patil</a> |
 | gauravbhaskar080 | <a href="https://github.com/gauravbhaskar080">Gaurav Bhaskar</a> |
 | Pisin2020 | <a href="github.com/Pisin2020">Pisin</a> |
@@ -55,3 +56,4 @@
 | Harshit Jaiswal |<a href="https://github.com/harshu84190">Harshit Jaiswal</a>|
 | Jayesh Sanjay Chaudhari |<a href="https://github.com/JayeshSCoder">Jayesh Sanjay Chaudhari</a>|
 | Aditya Chandel |<a href="https://github.com/TonyStark-19">TonyStark-19</a>|
+| Anand Kumar Patel |<a href="https://github.com/ubanand36"> Anand Kumar Patel</a>|

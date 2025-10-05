@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #0f0f0f;
+            color: #f1f1f1;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            background-color: #0f0f0f;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #272727;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-icon, .search-icon, .mic-icon, .create-icon, .notifications-icon {
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .menu-icon:hover, .search-icon:hover, .mic-icon:hover, .create-icon:hover, .notifications-icon:hover {
+            background-color: #272727;
+        }
+
+        .youtube-logo {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .youtube-icon {
+            color: #ff0000;
+            font-size: 24px;
+        }
+
+        .youtube-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            flex: 0 1 728px;
+            margin: 0 40px;
+        }
+
+        .search-container {
+            display: flex;
+            flex: 1;
+            max-width: 640px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0 12px;
+            height: 40px;
+            border: 1px solid #303030;
+            background-color: #121212;
+            border-radius: 20px 0 0 20px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .search-button {
+            width: 64px;
+            height: 40px;
+            background-color: #303030;
+            border: 1px solid #303030;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+        }
+
+        .mic-button {
+            margin-left: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            cursor: pointer;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: flex;
+            margin-top: 56px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 240px;
+            background-color: #0f0f0f;
+            height: calc(100vh - 56px);
+            position: fixed;
+            overflow-y: auto;
+            padding: 12px 0;
+        }
+
+        .sidebar-section {
+            padding: 8px 0;
+            border-bottom: 1px solid #272727;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 10px 24px;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 0 12px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #272727;
+        }
+
+        .sidebar-item.active {
+            background-color: #272727;
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-text {
+            font-size: 14px;
+        }
+
+        .sidebar-title {
+            padding: 8px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #aaa;
+        }
+
+        .channel-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd93d, #6bcf7f);
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: 240px;
+            padding: 24px;
+            flex: 1;
+            background-color: #0f0f0f;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+
+        .category-chip {
+            padding: 8px 12px;
+            background-color: #272727;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .category-chip.active {
+            background-color: white;
+            color: black;
+        }
+
+        .category-chip:hover {
+            background-color: #3f3f3f;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+        }
+
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .video-info {
+            display: flex;
+            gap: 12px;
+        }
+
+        .channel-avatar-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd93d, #6bcf7f);
+            flex-shrink: 0;
+        }
+
+        .video-details {
+            flex: 1;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .channel-name {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .video-meta {
+            font-size: 14px;
+            color: #aaa;
+            display: flex;
+            gap: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+            }
+            
+            .content {
+                margin-left: 72px;
+            }
+            
+            .sidebar-text, .sidebar-title {
+                display: none;
+            }
+            
+            .sidebar-item {
+                justify-content: center;
+                padding: 16px 0;
+            }
+            
+            .header-center {
+                margin: 0 20px;
+            }
+            
+            .search-input {
+                display: none;
+            }
+            
+            .search-button {
+                background: none;
+                border: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-right .search-icon,
+            .header-right .mic-icon,
+            .header-right .create-icon {
+                display: none;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 16px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f0f0f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #606060;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #909090;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-icon">≡</div>
+            <div class="youtube-logo">
+                <div class="youtube-icon">▶</div>
+                <div class="youtube-text">YouTube</div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search">
+                <button class="search-button">🔍</button>
+            </div>
+            <button class="mic-button">🎤</button>
+        </div>
+
+        <div class="header-right">
+            <div class="create-icon">➕</div>
+            <div class="notifications-icon">🔔</div>
+            <div class="user-avatar"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-item active">
+                    <div class="sidebar-icon">🏠</div>
+                    <div class="sidebar-text">Home</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">🔥</div>
+                    <div class="sidebar-text">Shorts</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">📺</div>
+                    <div class="sidebar-text">Subscriptions</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">📚</div>
+                    <div class="sidebar-text">Library</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">📜</div>
+                    <div class="sidebar-text">History</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">⏰</div>
+                    <div class="sidebar-text">Watch later</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">👍</div>
+                    <div class="sidebar-text">Liked videos</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">SUBSCRIPTIONS</div>
+                <div class="sidebar-item">
+                    <div class="channel-avatar"></div>
+                    <div class="sidebar-text">Tech Channel</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="channel-avatar"></div>
+                    <div class="sidebar-text">Music Hub</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="channel-avatar"></div>
+                    <div class="sidebar-text">Gaming Pro</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="channel-avatar"></div>
+                    <div class="sidebar-text">Cooking Master</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Categories -->
+            <div class="categories">
+                <div class="category-chip active">All</div>
+                <div class="category-chip">Music</div>
+                <div class="category-chip">Gaming</div>
+                <div class="category-chip">Live</div>
+                <div class="category-chip">Mixes</div>
+                <div class="category-chip">JavaScript</div>
+                <div class="category-chip">React</div>
+                <div class="category-chip">Python</div>
+                <div class="category-chip">Comedy</div>
+                <div class="category-chip">Recently uploaded</div>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="video-grid">
+                <!-- Video Card 1 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">10:30</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">Building a YouTube Clone with HTML & CSS - Full Tutorial</div>
+                            <div class="channel-name">Web Dev Simplified</div>
+                            <div class="video-meta">250K views • 2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 2 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">15:45</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">Learn JavaScript in 2024 - Complete Beginner's Guide</div>
+                            <div class="channel-name">JavaScript Mastery</div>
+                            <div class="video-meta">1.2M views • 1 week ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 3 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">8:22</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">Amazing CSS Tricks You Didn't Know About</div>
+                            <div class="channel-name">CSS Wizard</div>
+                            <div class="video-meta">450K views • 3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 4 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">22:10</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">React Hooks Explained - useState, useEffect, and more</div>
+                            <div class="channel-name">React Pro</div>
+                            <div class="video-meta">890K views • 2 weeks ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 5 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">12:35</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">Python Automation - Automate Your Daily Tasks</div>
+                            <div class="channel-name">Python Automation</div>
+                            <div class="video-meta">320K views • 5 days ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 6 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <div class="thumbnail"></div>
+                        <div class="duration">18:47</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar-small"></div>
+                        <div class="video-details">
+                            <div class="video-title">Building a Full Stack Application with MERN Stack</div>
+                            <div class="channel-name">Full Stack Dev</div>
+                            <div class="video-meta">670K views • 1 month ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu toggle functionality
+            const menuIcon = document.querySelector('.menu-icon');
+            const sidebar = document.querySelector('.sidebar');
+            
+            menuIcon.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+
+            // Category chip selection
+            const categoryChips = document.querySelectorAll('.category-chip');
+            categoryChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    categoryChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Sidebar item selection
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Video card click simulation
+            const videoCards = document.querySelectorAll('.video-card');
+            videoCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    alert('Video player would open here!');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
